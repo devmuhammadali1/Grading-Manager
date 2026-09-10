@@ -8,10 +8,20 @@
 
 using namespace std;
 
-struct Student {
-  string name;
+class Student {
+  private:
   int grade;
+  public:
+  string name;
+  Student(int Pgrade,string Pname){
+      name=Pname;
+      grade=(Pgrade<0||Pgrade>100?0:Pgrade);
+  }
+  int getGrade()const{return grade;}
+  void setGrade(int Pgrade){grade=(Pgrade<0||Pgrade>100?0:Pgrade);}
+  
 };
+
 int getValidatedInput(int min, int max, string prompt) {
   int inputValue;
   cin >> inputValue;
@@ -28,44 +38,54 @@ int getValidatedInput(int min, int max, string prompt) {
 double calculateAverage(vector<Student> &arr, int studentCount, int size) {
   double sum=0;
   for (int i = 0; i < size; i++) {
-    sum += arr[i].grade;
+    sum += arr[i].getGrade();
   }
   return sum / studentCount;
 }
-// int findHighest(vector <Student> &arr,int size){
-//     int highestGrade=0;
-//     for(int i=0;i<size;i++){
-//         if (arr[i].grade>highestGrade) {
-//         highestGrade=arr[i].grade;
-//         }
+int findHighest(vector <Student> &arr,int size){
+    int highestGrade=arr[0].getGrade();
+    for(int i=0;i<size;i++){
+        if (arr[i].getGrade()>highestGrade) {
+        highestGrade=arr[i].getGrade();
+        }
+    }
+    return highestGrade;
+}
+int findLowest(vector<Student> &arr, int size) {
+  int lowestGrade=arr[0].getGrade();
+  for (int i = 1; i < size; i++) {
+    if (arr[i].getGrade() < lowestGrade) {
+      lowestGrade = arr[i].getGrade();
+    }
+  }
+  return lowestGrade;
+}
+
+// int *findHighest(vector<Student> &arr, int size) {
+//   int *ptr = &arr[0].getGrade();
+//   for (int i = 1; i < size; i++) {
+//     if (arr[i].getGrade() > *ptr) {
+//       ptr = &arr[i].getGrade();
 //     }
-//     return highestGrade;
+//   }
+//   return ptr;
 // }
 
-int *findHighest(vector<Student> &arr, int size) {
-  int *ptr = &arr[0].grade;
-  for (int i = 1; i < size; i++) {
-    if (arr[i].grade > *ptr) {
-      ptr = &arr[i].grade;
-    }
-  }
-  return ptr;
-}
-int *findLowest(vector<Student> &arr, int size) {
-  int *ptr = &arr[0].grade;
-  for (int i = 1; i < size; i++) {
-    if (arr[i].grade < *ptr) {
-      ptr = &arr[i].grade;
-    }
-  }
-  return ptr;
-}
+// int *findLowest(vector<Student> &arr, int size) {
+//   int *ptr = &arr[0].getGrade();
+//   for (int i = 1; i < size; i++) {
+//     if (arr[i].getGrade() < *ptr) {
+//       ptr = &arr[i].getGrade();
+//     }
+//   }
+//   return ptr;
+// }
 void displayAboveAvg(vector<Student> &arr, int size, double avg) {
   cout << "Above Average Students: \n";
   bool aboveStd = false;
   for (int i = 0; i < size; i++) {
-    if (arr[i].grade > avg) {
-      cout << arr[i].name << ": " << arr[i].grade << '\n';
+    if (arr[i].getGrade() > avg) {
+      cout << arr[i].name << ": " << arr[i].getGrade() << '\n';
       aboveStd = true;
     }
   }
@@ -77,7 +97,7 @@ void displayAboveAvg(vector<Student> &arr, int size, double avg) {
 int LowestHighestCount(vector<Student> &arr, int size, int grade) {
   int count = 0;
   for (int i = 0; i < size; i++) {
-    if (arr[i].grade == grade) {
+    if (arr[i].getGrade() == grade) {
       count++;
     }
   }
@@ -88,7 +108,7 @@ void savingToFile(vector<Student> &students, string currentFile) {
   if (MyFile.is_open()) {
     for (int i = 0; i < size(students); i++) {
       MyFile << "Student " << i + 1 << ";\n Name: " << students[i].name
-             << "\n Grade: " << students[i].grade
+             << "\n Grade: " << students[i].getGrade()
              << (i < size(students) - 1 ? "\n\n" : "");
     }
     MyFile.close();
@@ -145,7 +165,7 @@ int main() {
         cout << "Grade: ";
         int grade =
             getValidatedInput(0, 100, "Invalid! Enter Grade Only 0 to 100!");
-        students.push_back({name, grade});
+        students.push_back(Student(grade, name));
         cout << endl;
       }
       // *****Grading Section*****
@@ -160,7 +180,7 @@ int main() {
         break;
       }
       for (int i = 0; i < size(students); i++) {
-        cout << i + 1 << ") " << students[i].name << ": " << students[i].grade
+        cout << i + 1 << ") " << students[i].name << ": " << students[i].getGrade()
              << '\n';
       }
       cout << "-------------------";
@@ -217,7 +237,7 @@ int main() {
           getline(MyFileR, name);
           getline(MyFileR, grade);
           getline(MyFileR, space);
-          students.push_back({name.substr(7), stoi(grade.substr(8))});
+          students.push_back(Student(stoi(grade.substr(8)), name.substr(7)));
         }
         MyFileR.close();
       } else {
@@ -241,25 +261,25 @@ int main() {
       // *****Total Avg Section*****
 
       // *****Highest Grade Section*****
-      int *highestGrade;
+      int highestGrade;
       int highestStudents;
       highestGrade = findHighest(students, size(students));
       highestStudents =
-          LowestHighestCount(students, size(students), *highestGrade);
+          LowestHighestCount(students, size(students), highestGrade);
       cout << endl;
-      cout << "Highest Grade: " << (size(students) > 0 ? *highestGrade : 0)
+      cout << "Highest Grade: " << (size(students) > 0 ? highestGrade : 0)
            << " (" << highestStudents
            << (highestStudents > 1 ? " Students" : " Student") << ')';
       // *****Highest Grade Section*****
 
       // *****Lowest Grade Section*****
-      int *lowestGrade;
+      int lowestGrade;
       int lowestStudents;
       lowestGrade = findLowest(students, size(students));
       lowestStudents =
-          LowestHighestCount(students, size(students), *lowestGrade);
+          LowestHighestCount(students, size(students), lowestGrade);
       cout << endl;
-      cout << "Lowest Grade: " << (size(students) > 0 ? *lowestGrade : 0)
+      cout << "Lowest Grade: " << (size(students) > 0 ? lowestGrade : 0)
            << " (" << lowestStudents
            << (lowestStudents > 1 ? " Students" : " Student") << ')';
       cout << endl;
