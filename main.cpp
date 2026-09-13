@@ -9,17 +9,19 @@
 using namespace std;
 
 class Student {
-  private:
+private:
   int grade;
-  public:
+
+public:
   string name;
-  Student(int Pgrade,string Pname){
-      name=Pname;
-      grade=(Pgrade<0||Pgrade>100?0:Pgrade);
+  Student(int grade, string name) {
+    this->name = name;
+    this->grade = (grade < 0 || grade > 100 ? 0 : grade);
   }
-  int getGrade()const{return grade;}
-  void setGrade(int Pgrade){grade=(Pgrade<0||Pgrade>100?0:Pgrade);}
-  
+  int getGrade() const { return grade; }
+  void setGrade(int grade) {
+    this->grade = (grade < 0 || grade > 100 ? 0 : grade);
+  }
 };
 
 int getValidatedInput(int min, int max, string prompt) {
@@ -36,23 +38,23 @@ int getValidatedInput(int min, int max, string prompt) {
   return inputValue;
 }
 double calculateAverage(vector<Student> &arr, int studentCount, int size) {
-  double sum=0;
+  double sum = 0;
   for (int i = 0; i < size; i++) {
     sum += arr[i].getGrade();
   }
   return sum / studentCount;
 }
-int findHighest(vector <Student> &arr,int size){
-    int highestGrade=arr[0].getGrade();
-    for(int i=0;i<size;i++){
-        if (arr[i].getGrade()>highestGrade) {
-        highestGrade=arr[i].getGrade();
-        }
+int findHighest(vector<Student> &arr, int size) {
+  int highestGrade = arr[0].getGrade();
+  for (int i = 0; i < size; i++) {
+    if (arr[i].getGrade() > highestGrade) {
+      highestGrade = arr[i].getGrade();
     }
-    return highestGrade;
+  }
+  return highestGrade;
 }
 int findLowest(vector<Student> &arr, int size) {
-  int lowestGrade=arr[0].getGrade();
+  int lowestGrade = arr[0].getGrade();
   for (int i = 1; i < size; i++) {
     if (arr[i].getGrade() < lowestGrade) {
       lowestGrade = arr[i].getGrade();
@@ -70,7 +72,6 @@ int findLowest(vector<Student> &arr, int size) {
 //   }
 //   return ptr;
 // }
-
 // int *findLowest(vector<Student> &arr, int size) {
 //   int *ptr = &arr[0].getGrade();
 //   for (int i = 1; i < size; i++) {
@@ -172,7 +173,7 @@ int main() {
     } break;
     // Option-2******
     case 2: {
-  
+
       cout << "\nStudents: \n";
       cout << "-------------------\n";
       if (size(students) < 1) {
@@ -180,8 +181,8 @@ int main() {
         break;
       }
       for (int i = 0; i < size(students); i++) {
-        cout << i + 1 << ") " << students[i].name << ": " << students[i].getGrade()
-             << '\n';
+        cout << i + 1 << ") " << students[i].name << ": "
+             << students[i].getGrade() << '\n';
       }
       cout << "-------------------";
     } break;
@@ -279,9 +280,9 @@ int main() {
       lowestStudents =
           LowestHighestCount(students, size(students), lowestGrade);
       cout << endl;
-      cout << "Lowest Grade: " << (size(students) > 0 ? lowestGrade : 0)
-           << " (" << lowestStudents
-           << (lowestStudents > 1 ? " Students" : " Student") << ')';
+      cout << "Lowest Grade: " << (size(students) > 0 ? lowestGrade : 0) << " ("
+           << lowestStudents << (lowestStudents > 1 ? " Students" : " Student")
+           << ')';
       cout << endl;
       // *****Lowest Grade Section*****
 
@@ -290,10 +291,10 @@ int main() {
       // *****Above Avg Students Section*****
     } break;
     // Option-0*****
-    case 0:{
+    case 0: {
       cout << "Goodbye!\n";
       cout << "\n ****** <Program Ended> ****** \n";
-    } break; 
+    } break;
     }
   } while (userChoice != 0);
   return 0;
